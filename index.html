@@ -1369,3 +1369,550 @@ function closeModal() {
 </script>
 </body>
 </html>
+
+<footer>
+    <p>© 2026 SubSafe D Pro. All rights reserved.</p>
+    <div>
+        <a href="#privacy" onclick="openLegalModal('privacy'); return false;">Privacy Policy</a> | 
+        <a href="#terms" onclick="openLegalModal('terms'); return false;">Terms of Use</a> | 
+        <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;">Disclaimer</a>
+    </div>
+</footer>
+
+<script>
+    const appState = {
+        currentResult: {
+            subName: "",
+            strictDateStr: "",
+            safeDateStr: "",
+            strictRaw: null,
+            safeRaw: null,
+            note: ""
+        },
+        subscriptions: [],
+        theme: ""
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadDashboardData();
+        const savedTheme = localStorage.getItem("userTheme") || "";
+        document.getElementById("themeSelect").value = savedTheme;
+        applyTheme(savedTheme);
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeModal();
+                closeLegalModal();
+            }
+        });
+    });
+
+    function changeTheme() {
+        const selectedTheme = document.getElementById("themeSelect").value;
+        appState.theme = selectedTheme;
+        try { localStorage.setItem("userTheme", selectedTheme); } catch(e){}
+        applyTheme(selectedTheme);
+    }
+
+    function applyTheme(theme) {
+        if (theme === "") {
+            document.documentElement.removeAttribute("data-theme");
+        } else {
+            document.documentElement.setAttribute("data-theme", theme);
+        }
+    }
+
+    function toggleFaq(button) {
+        const answer = button.nextElementSibling;
+        const span = button.querySelector('span:last-child');
+        const isOpen = answer.style.display === "block";
+        answer.style.display = isOpen ? "none" : "block";
+        span.innerText = isOpen ? "+" : "−";
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag] || tag));
+    }
+
+    function handleDateEntryModeChange() {
+        const mode = document.getElementById('dateEntryMode').value;
+        document.getElementById('renewalDateSection').style.display = (mode === 'renewal') ? 'block' : 'none';
+        document.getElementById('startDateSection').style.display = (mode === 'start') ? 'block' : 'none';
+        document.getElementById('billingDaySection').style.display = (mode === 'billingDay') ? 'block' : 'none';
+        document.getElementById('approxSection').style.display = (mode === 'approx') ? 'block' : 'none';
+    }
+
+    function handleDurationTypeChange() {
+        const type = document.getElementById('durationType').value;
+        document.getElementById('daysSection').style.display = 'none';
+        document.getElementById('weeksSection').style.display = 'none';
+        document.getElementById('monthsSection').style.display = 'none';
+        document.getElementById('yearsSection').style.display = 'none';
+
+        if (type === 'days') document.getElementById('daysSection').style.display = 'block';
+        if (type === 'weeks') document.getElementById('weeksSection').style.display = 'block';
+        if (type === 'months') document.getElementById('monthsSection').style.display = 'block';
+        if (type === 'years') document.getElementById('yearsSection').style.display = 'block';
+        resetCustomFields();
+    }
+
+    function handleDaysValueChange() {
+        const val = document.getElementById('daysValue').value;
+        document.getElementById('customDaysInput').style.display = (val === 'custom') ? 'block' : 'none';
+    }
+    function handleWeeksValueChange() {
+        const val = document.getElementById('weeksValue').value;
+        document.getElementById('customWeeksInput').style.display = (val === 'custom') ? 'block' : 'none';
+    }
+    function handleMonthsValueChange() {
+        const val = document.getElementById('monthsValue').value;
+        document.getElementById('customMonthsInput').style.display = (val === 'custom') ? 'block' : 'none';
+    }
+    function handleYearsValueChange() {
+        const val = document.getElementById('yearsValue').value;
+        document.getElementById('customYearsInput').style.display = (val === 'custom') ? 'block' : 'none';
+    }
+
+    function resetCustomFields() {
+        document.getElementById('daysValue').value = "";
+        document.getElementById('weeksValue').value = "";
+        document.getElementById('monthsValue').value = "";
+        document.getElementById('yearsValue').value = "";
+        document.getElementById('customDaysInput').style.display = 'none';
+        document.getElementById('customWeeksInput').style.display = 'none';
+        document.getElementById('customMonthsInput').style.display = 'none';
+        document.getElementById('customYearsInput').style.display = 'none';
+        document.getElementById('customDaysInput').value = "";
+        document.getElementById('customWeeksInput').value = "";
+        document.getElementById('customMonthsInput').value = "";
+        document.getElementById('customYearsInput').value = "";
+    }
+
+    function handleNoticePeriodChange() {
+        const val = document.getElementById('noticePeriod').value;
+        document.getElementById('customNoticeSection').style.display = (val === 'custom') ? 'block' : 'none';
+    }
+
+    function validateAndPrompt() {
+        let isValid = true;
+        document.querySelectorAll('.inline-error').forEach(el => el.style.display = 'none');
+
+        const subName = document.getElementById('subName').value.trim();
+        if (!subName) {
+            document.getElementById('subNameError').style.display = 'block';
+            isValid = false;
+        }
+
+        const mode = document.getElementById('dateEntryMode').value;
+        if (!mode) {
+            document.getElementById('dateModeError').style.display = 'block';
+            isValid = false;
+        } else if (mode === 'renewal' && !document.getElementById('billingDate').value) {
+            document.getElementById('billingDateError').style.display = 'block';
+            isValid = false;
+        } else if (mode === 'start') {
+            const startVal = document.getElementById('startDate').value;
+            const durationType = document.getElementById('durationType').value;
+            if (!startVal) { alert("Please select start date."); isValid = false; }
+            if (!durationType) { alert("Please select Subscription / Trial Unit."); isValid = false; }
+        }
+
+        const noticeVal = document.getElementById('noticePeriod').value;
+        if (noticeVal === "") {
+            document.getElementById('noticePeriodError').style.display = 'block';
+            isValid = false;
+        } else if (noticeVal === 'custom') {
+            const customVal = document.getElementById('customNoticeInput').value;
+            if (!customVal || parseInt(customVal) <= 0) {
+                isValid = false;
+                alert("Please enter a valid positive number of custom notice days.");
+            }
+        }
+
+        const regionVal = document.getElementById('serviceRegion').value;
+        if (regionVal === "") {
+            document.getElementById('serviceRegionError').style.display = 'block';
+            isValid = false;
+        }
+
+        if (!isValid) return;
+        document.getElementById('confirmModal').style.display = 'flex';
+    }
+
+// चेकबॉक्स टिक होने पर बटन को एक्टिवेट करने के लिए
+function toggleConfirmButton() {
+    const checkbox = document.getElementById('legalAgreeCheckbox');
+    const confirmBtn = document.getElementById('btnConfirmYes');
+    
+    if (checkbox.checked) {
+        confirmBtn.disabled = false;
+        confirmBtn.style.opacity = "1";
+        confirmBtn.style.cursor = "pointer";
+    } else {
+        confirmBtn.disabled = true;
+        confirmBtn.style.opacity = "0.5";
+        confirmBtn.style.cursor = "not-allowed";
+    }
+}
+
+// अपने मौजूदा closeModal() फंक्शन के अंदर इसे भी जोड़ें ताकि अगली बार मोडल खुलने पर यह रीसेट रहे
+function closeModal() {
+    // आपका मौजूदा मोडल क्लोज करने का कोड...
+    document.getElementById('confirmModal').style.display = 'none'; 
+    
+    // चेकबॉक्स और बटन को रीसेट करना
+    const checkbox = document.getElementById('legalAgreeCheckbox');
+    if(checkbox) checkbox.checked = false;
+    toggleConfirmButton();
+}
+
+    function executeCalculation() {
+        closeModal();
+
+        const subName = escapeHTML(document.getElementById('subName').value.trim());
+        const mode = document.getElementById('dateEntryMode').value;
+        let renewalDate = null;
+        let estimationNote = "";
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        if (mode === 'renewal') {
+            const val = document.getElementById('billingDate').value;
+            const parts = val.split('-');
+            renewalDate = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+        } else if (mode === 'start') {
+            const startVal = document.getElementById('startDate').value;
+            const durationType = document.getElementById('durationType').value;
+            let addDays = 0, addWeeks = 0, addMonths = 0, addYears = 0;
+
+            if (durationType === 'days') {
+                const val = document.getElementById('daysValue').value;
+                addDays = (val === 'custom') ? parseInt(document.getElementById('customDaysInput').value) || 0 : parseInt(val) || 0;
+            } else if (durationType === 'weeks') {
+                const val = document.getElementById('weeksValue').value;
+                let w = (val === 'custom') ? parseInt(document.getElementById('customWeeksInput').value) || 0 : parseInt(val) || 0;
+                addDays = w * 7;
+            } else if (durationType === 'months') {
+                const val = document.getElementById('monthsValue').value;
+                addMonths = (val === 'custom') ? parseInt(document.getElementById('customMonthsInput').value) || 0 : parseInt(val) || 0;
+            } else if (durationType === 'years') {
+                const val = document.getElementById('yearsValue').value;
+                addYears = (val === 'custom') ? parseInt(document.getElementById('customYearsInput').value) || 0 : parseInt(val) || 0;
+            }
+
+            const sParts = startVal.split('-');
+            let cur = new Date(parseInt(sParts[0]), parseInt(sParts[1])-1, parseInt(sParts[2]));
+
+            while (cur <= today) {
+                if (addDays > 0) cur.setDate(cur.getDate() + addDays);
+                if (addMonths > 0) cur.setMonth(cur.getMonth() + addMonths);
+                if (addYears > 0) cur.setFullYear(cur.getFullYear() + addYears);
+                if (addDays === 0 && addMonths === 0 && addYears === 0) break;
+            }
+            renewalDate = cur;
+            estimationNote = "Estimated based on start date and cycle duration.";
+        } else if (mode === 'billingDay') {
+            const dayNum = parseInt(document.getElementById('billingDayNum').value);
+            let cur = new Date(today.getFullYear(), today.getMonth(), dayNum);
+            if (cur <= today) cur.setMonth(cur.getMonth() + 1);
+            renewalDate = cur;
+            estimationNote = "Estimated based on monthly billing day.";
+        } else if (mode === 'approx') {
+            const approxVal = document.getElementById('approxMonth').value;
+            const aParts = approxVal.split('-');
+            renewalDate = new Date(parseInt(aParts[0]), parseInt(aParts[1]), 1);
+            estimationNote = "Estimated based on approximate renewal month.";
+        }
+
+        let noticeDays = 0;
+        const noticeVal = document.getElementById('noticePeriod').value;
+        if (noticeVal === 'custom') {
+            noticeDays = parseInt(document.getElementById('customNoticeInput').value) || 0;
+        } else {
+            noticeDays = parseInt(noticeVal) || 0;
+        }
+
+        const regionBuffer = parseInt(document.getElementById('serviceRegion').value) || 0;
+        const excludeWeekends = document.getElementById('advanceBusinessDays').checked;
+        let totalDeduction = noticeDays + regionBuffer;
+
+        let strictRaw = new Date(renewalDate);
+        strictRaw.setDate(strictRaw.getDate() - totalDeduction);
+
+        if (excludeWeekends) {
+            while (strictRaw.getDay() === 0 || strictRaw.getDay() === 6) {
+                strictRaw.setDate(strictRaw.getDate() - 1);
+            }
+        }
+
+        let safeRaw = new Date(strictRaw);
+        safeRaw.setDate(safeRaw.getDate() - 2);
+
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
+        const strictDateStr = strictRaw.toLocaleDateString('en-US', dateOptions);
+        const safeDateStr = safeRaw.toLocaleDateString('en-US', dateOptions);
+
+        appState.currentResult = { subName, strictDateStr, safeDateStr, strictRaw, safeRaw, note: estimationNote };
+
+        document.getElementById('strictDate').innerText = strictDateStr;
+        document.getElementById('safeDate').innerText = safeDateStr;
+
+        const noteEl = document.getElementById('estimationNote');
+        if (estimationNote) {
+            noteEl.innerText = `ℹ️ Note: ${estimationNote}`;
+            noteEl.className = 'blinking-note'; // Apply blinking CSS class
+            noteEl.style.display = 'inline-block';
+        } else {
+            noteEl.style.display = 'none';
+            noteEl.className = '';
+        }
+
+        document.getElementById('resultBox').style.display = 'block';
+        document.getElementById('optionsBox').style.display = 'block';
+        document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function speakSubscription(id) {
+        const sub = appState.subscriptions.find(s => s.id === id);
+        if (!sub) return;
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const text = `Subscription name: ${sub.name}. Recommended safe action date is ${sub.safeDateStr}. Strict deadline is ${sub.strictDateStr}. Strict rawTime is ${sub.strictRaw}. Safe raw is ${sub.safeRaw}. Note is ${sub.note}.`;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Text-to-speech is not supported by your browser.");
+        }
+    }
+
+    function addToGoogleCalendar() {
+        const res = appState.currentResult;
+        if (!res.strictRaw) return;
+        const yyyy = res.strictRaw.getFullYear();
+        const mm = String(res.strictRaw.getMonth() + 1).padStart(2, '0');
+        const dd = String(res.strictRaw.getDate()).padStart(2, '0');
+        const dStr = `${yyyy}${mm}${dd}`;
+
+        const title = encodeURIComponent(`Cancel ${res.subName} Subscription`);
+        const details = encodeURIComponent(`Strict deadline to cancel ${res.subName} to prevent auto-renewal charges.`);
+        window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dStr}/${dStr}&details=${details}&sf=true&output=xml`, '_blank');
+    }
+
+    function downloadICSFile() {
+        const res = appState.currentResult;
+        if (!res.strictRaw) return;
+        const yyyy = res.strictRaw.getFullYear();
+        const mm = String(res.strictRaw.getMonth() + 1).padStart(2, '0');
+        const dd = String(res.strictRaw.getDate()).padStart(2, '0');
+        const dStr = `${yyyy}${mm}${dd}`;
+
+        const icsContent = "BEGIN:VCALENDAR\n" +
+                           "VERSION:2.0\n" +
+                           "BEGIN:VEVENT\n" +
+                           `DTSTART;VALUE=DATE:${dStr}\n` +
+                           `DTEND;VALUE=DATE:${dStr}\n` +
+                           `SUMMARY:Cancel ${res.subName} Strict Deadline\n` +
+                           `DESCRIPTION:Action required: Cancel subscription.\n` +
+                           "END:VEVENT\n" +
+                           "END:VCALENDAR";
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", `cancel_${res.subName.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function copyToClipboard() {
+        const res = appState.currentResult;
+        if (!res.strictDateStr) return;
+        const text = `Subscription: ${res.subName}\nStrict Cancel Deadline: ${res.strictDateStr}\nSafe Action Date: ${res.safeDateStr}`;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Copied reminder summary to clipboard!");
+        });
+    }
+
+    function saveToDashboard() {
+        const res = appState.currentResult;
+        if (!res.subName || !res.strictRaw) return;
+
+        const editId = document.getElementById('editSubscriptionId').value;
+        try {
+            let subs = JSON.parse(localStorage.getItem("userSubscriptions")) || [];
+            if (editId) {
+                subs = subs.filter(s => s.id != editId);
+                document.getElementById('editSubscriptionId').value = "";
+            }
+
+            const newSub = {
+                id: Date.now(),
+                name: res.subName,
+                strictDateStr: res.strictDateStr,
+                safeDateStr: res.safeDateStr,
+                strictRawTime: res.strictRaw.getTime()
+            };
+
+            subs.push(newSub);
+            localStorage.setItem("userSubscriptions", JSON.stringify(subs));
+            loadDashboardData();
+            alert(`Successfully saved "${res.subName}" to dashboard!`);
+        } catch (e) {
+            alert("⚠️ Browser storage restricted or unavailable.");
+        }
+    }
+
+    function loadDashboardData() {
+        try {
+            appState.subscriptions = JSON.parse(localStorage.getItem("userSubscriptions")) || [];
+        } catch (e) {
+            appState.subscriptions = [];
+        }
+        filterDashboard();
+    }
+
+    function filterDashboard() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const sortBy = document.getElementById('sortSelect').value;
+
+        let filtered = appState.subscriptions.filter(sub => sub.name.toLowerCase().includes(query));
+
+        if (sortBy === 'nearest') {
+            filtered.sort((a, b) => a.strictRawTime - b.strictRawTime);
+        } else if (sortBy === 'name') {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        const tbody = document.getElementById('dashboardBody');
+        tbody.innerHTML = "";
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; opacity:0.6;">No subscriptions found.</td></tr>`;
+            return;
+        }
+
+        const today = new Date().setHours(0,0,0,0);
+
+        filtered.forEach(sub => {
+            const diffDays = Math.ceil((sub.strictRawTime - today) / (1000 * 60 * 60 * 24));
+            let badgeHtml = "";
+
+            if (diffDays < 0) {
+                badgeHtml = `<span class="badge badge-red">Late by ${Math.abs(diffDays)} days</span>`;
+            } else if (diffDays === 0) {
+                badgeHtml = `<span class="badge badge-red">Cancel Today!</span>`;
+            } else if (diffDays <= 3) {
+                badgeHtml = `<span class="badge badge-orange">${diffDays} days left</span>`;
+            } else {
+                badgeHtml = `<span class="badge badge-green">Safe (${diffDays}d left)</span>`;
+            }
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><strong>${sub.name}</strong><br><small style="color:var(--faq-answer)">Safe: ${sub.safeDateStr}</small></td>
+                <td style="font-weight:600;">${sub.strictDateStr}</td>
+                <td>${badgeHtml}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="tbl-btn speak-btn" onclick="speakSubscription(${sub.id})" title="Listen details">🔊</button>
+                        <button class="tbl-btn edit-btn" onclick="editSubscription(${sub.id})">Edit</button>
+                        <button class="tbl-btn delete-btn" onclick="deleteSubscription(${sub.id})">Delete</button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function editSubscription(id) {
+        const sub = appState.subscriptions.find(s => s.id === id);
+        if (!sub) return;
+        document.getElementById('subName').value = sub.name;
+        document.getElementById('editSubscriptionId').value = sub.id;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        alert(`Loaded "${sub.name}" into form. Update settings and recalculate to save changes.`);
+    }
+
+    function deleteSubscription(id) {
+        try {
+            let subs = JSON.parse(localStorage.getItem("userSubscriptions")) || [];
+            subs = subs.filter(s => s.id !== id);
+            localStorage.setItem("userSubscriptions", JSON.stringify(subs));
+            loadDashboardData();
+        } catch (e) {
+            alert("Could not delete. Storage restricted.");
+        }
+    }
+
+    function openLegalModal(type) {
+        const modal = document.getElementById('legalModal');
+        const titleEl = document.getElementById('legalModalTitle');
+        const contentEl = document.getElementById('legalModalContent');
+
+        if (type === 'privacy') {
+            titleEl.innerText = "Data Privacy";
+            contentEl.innerHTML = "<p>We do not collect or upload your subscription details to any server. All data (like Subscription Name and Dates) is processed and stored locally within your own browser's 'Local Storage'.</p>";
+        } else if (type === 'terms') {
+            titleEl.innerText = "Terms & Conditions";
+            contentEl.innerHTML = `
+                <p>Rules and guidelines for using the Subscription Last Safe Cancel Date Calculator.</p>
+                <h4>No Financial or Legal Advice</h4>
+                <p>The Subscription Last Safe Cancel Date Calculator is an informational tool only. It does not constitute financial, legal, or professional advice. The final decision and responsibility to manage, track, or cancel any subscription rests entirely with the user.</p>
+                <h4>User Responsibility</h4>
+                <p>By using this website, you agree that you are solely responsible for managing your financial subscriptions. The reminders and dates provided by our calculator are strictly for personal organizational purposes.</p>
+                <h4>Analytics and Cookies</h4>
+                <p>We may use standard analytics tools (like Google Analytics) to see how many people visit our site, what countries they are from, and what devices they use. This data is anonymized and cannot identify you personally. We may also show ads (like Google AdSense) which use cookies to show relevant advertisements.</p>
+                <h4>Limitation of Liability</h4>
+                <p>To the maximum extent permitted by law, this website and its creator shall not be liable for any direct or indirect financial damages, including but not limited to, unwanted subscription charges, over-draft fees, or lost funds arising from your reliance on the dates generated by this tool.</p>
+                <p><strong>Contact:</strong> [Your Email ID Here]</p>
+            `;
+        } else if (type === 'disclaimer') {
+            titleEl.innerText = "Disclaimer";
+            contentEl.innerHTML = `
+                <p>Important information about using our Subscription Last Safe Cancel Date Calculator.</p>
+                <h4>No Affiliation & Trademark</h4>
+                <p>All product names, logos, and brands mentioned on this website are the property of their respective owners. Their use on this website is purely for illustrative and informational purposes. This website is NOT affiliated with, endorsed by, or sponsored by any of these companies.</p>
+                <h4 style="color: #ef4444; font-weight: bold;">⚠️ CRITICAL: NOT AN AUTO-CANCEL SERVICE</h4>
+                <p><strong>Let us be absolutely clear:</strong> Using this website, clicking "Calculate Last Safe Cancel Date", or saving a date to the Dashboard <strong>DOES NOT</strong> cancel your actual subscription. We do not have access to your bank, credit cards, or accounts. This tool is strictly a mathematical calculator and reminder generator. You are entirely responsible for manually logging into your respective service provider's website to cancel your subscription.</p>
+                <h4>Accuracy of Tools</h4>
+                <p>While we strive to provide precise date calculations based on your local time zone, we cannot guarantee 100% accuracy. The effectiveness of our calculations may vary depending on leap years, specific corporate billing policies, and your device's internal clock. Always verify your actual billing date.</p>
+                <h4>No Financial or Legal Responsibility</h4>
+                <p>Our tools are provided "as is" and "as available" basis without warranties of any sort. Users assume all associated financial risks. We accept absolutely no legal or financial responsibility for unforeseen banking charges, subscription fees, or automatic collections initiated by third-party service providers. We are not responsible for any financial losses, unwanted credit card charges, auto-renewal fees, or legal issues if you forget to cancel a subscription, or if the calculated date differs from your provider's actual cutoff time.</p>
+            `;
+        } else if (type === 'subName') {
+            titleEl.innerText = "Guide: Subscription Name";
+            contentEl.innerHTML = `
+                <p><strong>What to type in this field:</strong></p>
+                <p>Enter the specific name of the service, website, app, or platform you are using and want to cancel (e.g., Video Streaming app, Music service, Fitness Club, Cloud Storage provider, Online Class platform, AI software).</p>
+                <p><strong>Important Tip:</strong> Do not just type a broad category name. Write the exact specific name of the provider so you can easily distinguish between multiple subscriptions you might be managing in your dashboard.</p>
+            `;
+        } else if (type === 'noticePeriod') {
+            titleEl.innerText = "Guide: Notice Period Categories";
+            contentEl.innerHTML = `
+                <p>The notice period refers to how many days in advance you must inform the company before your subscription renews.</p>
+                <ul style="padding-left: 18px; margin: 8px 0;">
+                    <li><strong>Same Day (Immediate):</strong> Immediate cancellation on the same day.</li>
+                    <li><strong>1 Day Before (Basic Online Services):</strong> General online tools or simple apps (e.g., basic monthly cloud storage or mobile tools).</li>
+                    <li><strong>2 Days Before (Digital Content Plans):</strong> Entertainment and streaming platforms (e.g., video streaming, music apps, digital magazines).</li>
+                    <li><strong>3 Days Before (Standard Digital Services):</strong> Regularly used digital services (e.g., online courses, advanced editing software, business emails).</li>
+                    <li><strong>7 Days Before (Software & Hosting Plans):</strong> Heavy website and software services (e.g., web hosting plans, domain registrations, cloud computing).</li>
+                    <li><strong>15 Days Before (Mid-term Subscriptions):</strong> Medium-term plans (e.g., 3 to 6-month fitness club memberships, coaching classes).</li>
+                    <li><strong>30 Days Before (Annual & Membership Plans):</strong> Long-term yearly plans (e.g., annual premium memberships, yearly broadband plans, annual insurance/business software).</li>
+                    <li><strong>Custom Number of Days:</strong> Enter your own custom days if your service does not fit the above standard categories.</li>
+                </ul>
+            `;
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeLegalModal() {
+        document.getElementById('legalModal').style.display = 'none';
+    }
+</script>
+</body>
+</html>
