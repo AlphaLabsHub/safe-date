@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+   <meta name="google-site-verification" content="M9cwuiD5-f2l0euUyQ7iNNjG8SCnjA1G0fNHG2lhCig" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubSafe D Pro - Smart Subscription & Renewal Manager</title>
@@ -411,18 +412,21 @@
 .modal-box::-webkit-scrollbar-thumb:hover {
     background: #aaaaaa;
 }
-        }
+
         .modal-text { font-size: 14.5px; line-height: 1.6; color: var(--text-main); margin-bottom: 20px; }
-        .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; }
-        .modal-btn {
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            width: auto;
-            margin-top: 0;
+        .modal-buttons { 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 12px; 
+            position: sticky; /* बटनों को नीचे स्थिर (Sticky) रखने के लिए */
+            bottom: -25px; /* मोडल की पैडिंग के साथ संरेखित (Align) करने के लिए */
+            background-color: var(--card-bg); /* स्क्रॉल करते समय टेक्स्ट इसके पीछे छुप जाएगा */
+            padding: 12px 0 25px 0;
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color); /* कंटेंट और बटन के बीच स्पष्ट सीमा रेखा */
+            z-index: 10;
         }
+
         .btn-cancel { background-color: var(--table-th-bg); color: var(--table-th-text); border: 1px solid var(--border-color); }
         .btn-yes { background-color: var(--primary-color); color: white; border: none; }
 
@@ -643,20 +647,49 @@
     <div id="serviceRegionError" class="inline-error">Please select a location/timezone buffer.</div>
     <p style="font-size: 12px; color: var(--faq-answer); margin-top: 4px;">ℹ️ Foreign service providers often operate on cut-off hours from different continents, creating potential overnight timezone gaps.</p>
 
-<!-- लीगल चेकबॉक्स सेक्शन -->
-<div style="display: flex; align-items: flex-start; gap: 12px; margin: 20px 0; padding: 12px; background-color: var(--result-bg); border-radius: 6px; border: 1px solid var(--border-color); text-align: left;">
-    
-    <!-- चेकबॉक्स को एक फिक्स्ड साइज वाले कंटेनर में रखा है ताकि यह हिले नहीं -->
-    <div style="flex-shrink: 0; display: flex; align-items: center; height: 20px;">
-        <input type="checkbox" id="advanceBusinessDays"
-               style="width: 18px; height: 18px; margin: 0; cursor: pointer; transform: translateZ(0);">
-    </div>
-    
-    <!-- लेबल का टेक्स्ट अब पूरी तरह स्थिर रहेगा -->
-    <label for="advanceBusinessDays" style="cursor: pointer; margin: 0; font-size: 13px; line-height: 1.5; display: block; -webkit-font-smoothing: antialiased;">
-      <strong>Exclude Weekends (Business Days Calculation):</strong> Automatically adjust notice period if weekends fall right before the deadline.</span>
-        </label>
-    </div>
+<div style="margin-top: 15px; padding: 12px; background-color: var(--result-bg); border-radius: 8px; border: 1px solid var(--border-color); -webkit-tap-highlight-color: transparent; user-select: none;">
+    <label style="font-weight: normal; margin: 0; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent;">
+        <input type="checkbox" id="advanceBusinessDays" class="custom-flicker-free-checkbox">
+        <span style="font-size: 13px; line-height: 1.4; display: block;"><strong>Exclude Weekends (Business Days Calculation):</strong> Automatically adjust notice period if weekends fall right before the deadline.</span>
+    </label>
+</div>
+
+<style>
+/* OS के डिफ़ॉल्ट विजेट और एनिमेशन का विलोपन */
+.custom-flicker-free-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    margin-top: 1px !important;
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    outline: none !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: grid;
+    place-content: center;
+    background-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+    transition: none !important;
+}
+
+/* चेक (Checked) होने पर टिक मार्क प्रदर्शित करना */
+.custom-flicker-free-checkbox:checked {
+    background-color: #ffffff;
+}
+
+.custom-flicker-free-checkbox:checked::before {
+    content: "✓";
+    color: #1e40af; /* पृष्ठभूमि (Background) के अनुसार रंग सेट करें */
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1;
+}
+</style>
+
 
     <button class="btn-primary" onclick="validateAndPrompt()">Calculate Last Safe Cancel Date</button>
 
@@ -794,31 +827,72 @@
             </p>
             
             <!-- लीगल चेकबॉक्स सेक्शन -->
-            <div style="display: flex; align-items: flex-start; gap: 10px; margin: 20px 0; padding: 12px; background-color: var(--card-bg); border-radius: 6px; border: 1px solid var(--border-color); text-align: left;">
-                <label style="cursor: pointer; margin-top: 0; margin-bottom: 0; font-size: 14px; line-height: 1.2;"> 
-                <input type="checkbox" id="legalAgreeCheckbox" onchange="toggleConfirmButton()"  style="width: auto; margin-top: 2px; cursor: pointer;">
-            <span style="font-size: 13px;" ><strong>I (User)</strong> have read and agree to the ⚠️ Essential Disclaimer & Legal Note, 
-                    <a href="#privacy" onclick="openLegalModal('privacy'); return false;" style="color: #0066cc; text-decoration: underline;">Privacy Policy</a>, 
-                    <a href="#terms" onclick="openLegalModal('terms'); return false;" style="color: #0066cc; text-decoration: underline;">Terms of Use</a> & 
-                    <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;" style="color: #0066cc; text-decoration: underline;">Disclaimer</a>. 
-        <p>I accept full responsibility for any financial loss or automatic renewal.</p>
-        <p>I agree that the dates provided by this calculator are estimates only. I acknowledge that:</p></strong>
-        <p>Official notice periods and processing times vary by service provider.</p>
-        <p>I am solely responsible for verifying the exact terms with my provider.</p>
-        <p>This website/app holds no liability for any financial loss, missed deadlines, or automatic renewals.</p>
-        <p>I am advised to cancel at least 1–2 days before the estimated deadline to avoid charges.</p></span>
+            <div style="margin: 20px 0; padding: 12px; background-color: var(--card-bg); border-radius: 6px; border: 1px solid var(--border-color); text-align: left; user-select: none; -webkit-tap-highlight-color: transparent;">
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; margin: 0; font-size: 13px; line-height: 1.4;"> 
+                    <input type="checkbox" id="legalAgreeCheckbox" class="custom-flicker-free-checkbox" onchange="toggleConfirmButton()">
+                    <div style="flex: 1; color: inherit;">
+                        <strong>I (User)</strong> have read and agree to the ⚠️ Essential Disclaimer & Legal Note, 
+                        <a href="#privacy" onclick="openLegalModal('privacy'); return false;" style="color: #0066cc; text-decoration: underline;">Privacy Policy</a>, 
+                        <a href="#terms" onclick="openLegalModal('terms'); return false;" style="color: #0066cc; text-decoration: underline;">Terms of Use</a> & 
+                        <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;" style="color: #0066cc; text-decoration: underline;">Disclaimer</a>. 
+                        
+                        <p style="margin: 8px 0 4px 0; font-weight: 600;">I accept full responsibility for any financial loss or automatic renewal.</p>
+                        <p style="margin: 4px 0; font-weight: 600;">I agree that the dates provided by this calculator are estimates only. I acknowledge that:</p>
+                        
+                        <ul style="margin: 4px 0 0 18px; padding: 0; list-style-type: disc;">
+                            <li style="margin-bottom: 3px;">Official notice periods and processing times vary by service provider.</li>
+                            <li style="margin-bottom: 3px;">I am solely responsible for verifying the exact terms with my provider.</li>
+                            <li style="margin-bottom: 3px;">This website/app holds no liability for any financial loss, missed deadlines, or automatic renewals.</li>
+                            <li style="margin-bottom: 0;">I am advised to cancel at least 1–2 days before the estimated deadline to avoid charges.</li>
+                        </ul>
+                    </div>
                 </label>
             </div>
             
-            <p style="font-weight: bold; color: #555;">Please check the box above and confirm to calculate.</p>
+            <p style="font-weight: bold; color: #555; margin-top: 10px;">Please check the box above and confirm to calculate.</p>
         </div>
         <div class="modal-buttons" style="margin-top: 20px;">
             <button class="modal-btn btn-cancel" onclick="closeModal()">Cancel</button>
-            <!-- शुरुआती तौर पर यह बटन disabled रहेगा -->
             <button class="modal-btn btn-yes" id="btnConfirmYes" onclick="executeCalculation()" disabled style="opacity: 0.5; cursor: not-allowed;">Confirm, Yes</button>
         </div>
     </div>
 </div>
+
+<style>
+/* एंटी-फ्लिकर चेकबॉक्स स्टाइल */
+.custom-flicker-free-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    margin-top: 2px !important;
+    border: 2px solid #555555;
+    border-radius: 4px;
+    outline: none !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: grid;
+    place-content: center;
+    background-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+    transition: none !important;
+}
+
+.custom-flicker-free-checkbox:checked {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.custom-flicker-free-checkbox:checked::before {
+    content: "✓";
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+}
+</style>
 
 <!-- Legal & Guide Information Modal -->
 <div id="legalModal" class="modal-overlay" role="dialog" aria-modal="true">
@@ -834,9 +908,11 @@
 <footer>
     <p>© 2026 SubSafe D Pro. All rights reserved.</p>
     <div>
-        <a href="#privacy" onclick="openLegalModal('privacy'); return false;">Privacy Policy</a> | 
-        <a href="#terms" onclick="openLegalModal('terms'); return false;">Terms of Use</a> | 
-        <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;">Disclaimer</a>
+        <a href="#privacy" onclick="openLegalModal('privacy'); return false;">Privacy&nbsp;Policy</a> | 
+        <a href="#terms" onclick="openLegalModal('terms'); return false;">Terms&nbsp;of&nbsp;Use</a> | 
+        <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;">Disclaimer</a> | 
+        <a href="#About" onclick="openLegalModal('About'); return false;">About&nbsp;Us</a> | 
+        <a href="#Contact" onclick="openLegalModal('Contact'); return false;">Contact&nbsp;Us</a>
     </div>
 </footer>
 
@@ -978,6 +1054,21 @@
             const durationType = document.getElementById('durationType').value;
             if (!startVal) { alert("Please select start date."); isValid = false; }
             if (!durationType) { alert("Please select Subscription / Trial Unit."); isValid = false; }
+    // 👇 यहाँ से यह नया कोड जोड़ें 👇
+    if (durationType) {
+        const valDropdown = document.getElementById(durationType + 'Value').value;
+        if (!valDropdown) {
+            alert(`Please select the total number of ${durationType}.`);
+            isValid = false;
+        } else if (valDropdown === 'custom') {
+            const customVal = document.getElementById('custom' + durationType.charAt(0).toUpperCase() + durationType.slice(1) + 'Input').value;
+            if (!customVal || parseInt(customVal) <= 0) {
+                alert(`Please enter a valid custom number for ${durationType}.`);
+                isValid = false;
+            }
+        }
+    }
+    // 👆 नया कोड यहाँ समाप्त 👆
         }
 
         const noticeVal = document.getElementById('noticePeriod').value;
@@ -1141,7 +1232,7 @@ function closeModal() {
         if (!sub) return;
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            const text = `Subscription name: ${sub.name}. Recommended safe action date is ${sub.safeDateStr}. Strict deadline is ${sub.strictDateStr}. Strict rawTime is ${sub.strictRaw}. Safe raw is ${sub.safeRaw}. Note is ${sub.note}.`;
+            const text = `Subscription name: ${sub.name}. Recommended safe action date is ${sub.safeDateStr}. Strict deadline is ${sub.strictDateStr}.`;
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 1.0;
             window.speechSynthesis.speak(utterance);
@@ -1316,8 +1407,15 @@ function closeModal() {
         const contentEl = document.getElementById('legalModalContent');
 
         if (type === 'privacy') {
-            titleEl.innerText = "Data Privacy";
-            contentEl.innerHTML = "<p>We do not collect or upload your subscription details to any server. All data (like Subscription Name and Dates) is processed and stored locally within your own browser's 'Local Storage'.</p>";
+            titleEl.innerText = "Privacy Policy";
+            contentEl.innerHTML = `
+                <p>At SubSafe D Pro (AlphaLabsHub), accessible from our Vercel URL, user privacy is one of our main priorities.</p>
+                <h4>Data Privacy:</h4>
+            <p>We do not collect or upload your subscription details to any server. All data (like Subscription Name and Dates) is processed and stored locally within your own browser's 'Local Storage'.</p>
+                <h4>Data Collection:</h4><p>We do not collect, store, or log any personal data, subscription names, or billing dates entered into our calculator. All calculations are performed directly within your local web browser using JavaScript. No information is ever sent to our servers.</p>
+                <h4>Cookies and Third-Party Ads:</h4><p>Once our website integrates Google AdSense, third-party vendors, including Google, may use cookies to serve ads based on a user's prior visits to our website. Users may opt out of personalized advertising by visiting Google Ads Settings.</p>
+                <h4>Consent:</h4><p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+            `;
         } else if (type === 'terms') {
             titleEl.innerText = "Terms & Conditions";
             contentEl.innerHTML = `
@@ -1336,6 +1434,8 @@ function closeModal() {
             titleEl.innerText = "Disclaimer";
             contentEl.innerHTML = `
                 <p>Important information about using our Subscription Last Safe Cancel Date Calculator.</p>
+                <p>The information and calculations provided by SubSafe D Pro are for informational and educational purposes only. This tool is designed to help estimate dates based on the mathematical data inputted by the user.</p>
+                <p>It does not constitute financial, legal, or professional advice. Corporate subscription, trial, and cancellation policies vary widely and can change at any time without notice. Always verify your official billing cycle and terms directly with your service provider. AlphaLabsHub is not responsible for any automatic billings, bank charges, or financial losses incurred by relying on this tool.</p>
                 <h4>No Affiliation & Trademark</h4>
                 <p>All product names, logos, and brands mentioned on this website are the property of their respective owners. Their use on this website is purely for illustrative and informational purposes. This website is NOT affiliated with, endorsed by, or sponsored by any of these companies.</p>
                 <h4 style="color: #ef4444; font-weight: bold;">⚠️ CRITICAL: NOT AN AUTO-CANCEL SERVICE</h4>
@@ -1344,6 +1444,32 @@ function closeModal() {
                 <p>While we strive to provide precise date calculations based on your local time zone, we cannot guarantee 100% accuracy. The effectiveness of our calculations may vary depending on leap years, specific corporate billing policies, and your device's internal clock. Always verify your actual billing date.</p>
                 <h4>No Financial or Legal Responsibility</h4>
                 <p>Our tools are provided "as is" and "as available" basis without warranties of any sort. Users assume all associated financial risks. We accept absolutely no legal or financial responsibility for unforeseen banking charges, subscription fees, or automatic collections initiated by third-party service providers. We are not responsible for any financial losses, unwanted credit card charges, auto-renewal fees, or legal issues if you forget to cancel a subscription, or if the calculated date differs from your provider's actual cutoff time.</p>
+            `;
+        } else if (type === 'About') {
+            titleEl.innerText = "About Us";
+            contentEl.innerHTML = `
+                <p>Welcome to SubSafe D Pro (by AlphaLabsHub). We are a dedicated digital utility studio focused on building smart, lightweight, and privacy-focused web tools that simplify daily routines.</p>
+                <p>Our mission is to help global users save time and avoid unwanted financial expenses. SubSafe D Pro was created out of a simple need: to provide a quick, one-click solution for calculating subscription free-trial deadlines and setting instant renewal reminders. We believe in high-utility web apps that require no user registration and ensure complete data privacy.</p>
+            `;
+        } else if (type === 'Contact') {
+            titleEl.innerText = "Contact Us";
+            contentEl.innerHTML = `
+                <p>Have questions, suggestions, or feedback about SubSafe D Pro? We would love to hear from you! You can reach out to our team directly via email.</p>
+                <p><strong>Email:</strong> [यहाँ अपना नया गुप्त जीमेल एड्रेस पेस्ट करें]</p>
+                <h4>Response Time:</h4>
+                <p>We strive to respond to all user inquiries within 48 hours. Thank you for using our tool!</p>
+            <h3 style="color: var(--text-main); margin-bottom: 15px;">Contact AlphaLabs</h3>
+            <p class="modal-text">Got a question or found a bug? Drop us a message below!</p>
+
+            <form action="https://formspree.io/f/YOUR_SECRET_ID_HERE" method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="email" name="email" placeholder="Your Email Address" required style="padding: 10px; border-radius: 6px; border: 1px solid #ccc; background: var(--bg-card); color: var(--text-main); font-family: inherit;">
+                
+                <textarea name="message" placeholder="Type your message here..." required style="padding: 10px; border-radius: 6px; border: 1px solid #ccc; background: var(--bg-card); color: var(--text-main); min-height: 100px; resize: vertical; font-family: inherit;"></textarea>
+                
+                <div class="modal-buttons" style="margin-top: 10px;">
+                    <button type="submit" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Send Message</button>
+                </div>
+            </form>
             `;
         } else if (type === 'subName') {
             titleEl.innerText = "Guide: Subscription Name";
