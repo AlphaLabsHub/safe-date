@@ -459,6 +459,237 @@
         }
         footer a { color: var(--primary-color); text-decoration: none; margin: 0 8px; }
         footer a:hover { text-decoration: underline; }
+
+/* Cookie Toggle Button (Bottom Left) */
+.cookie-toggle-btn {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.cookie-toggle-btn:hover {
+    transform: scale(1.08);
+}
+
+/* Cookie Popup Box Styling */
+.cookie-popup {
+    position: fixed;
+    bottom: 90px; /* बटन के ठीक ऊपर */
+    left: 25px;
+    width: calc(100% - 50px);
+    max-width: 360px; /* सभी डिवाइस के लिए अनुकूलित */
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+    
+    /* Animation Properties */
+    transform-origin: bottom left;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* बाउंसिंग इफ़ेक्ट */
+    opacity: 0;
+    transform: scale(0.5) translate(-30px, 40px);
+    pointer-events: none; /* जब छुपा हो तब क्लिक न हो */
+}
+
+/* यह क्लास JS के जरिए बॉक्स को बाहर निकालेगी */
+.cookie-popup.show {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+    pointer-events: auto;
+}
+
+.cookie-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cookie-content p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text-main);
+}
+
+.cookie-content a {
+    color: var(--primary-color);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.cookie-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn-accept {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-accept:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-decline {
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.btn-decline:hover {
+    background-color: var(--table-th-bg);
+}
+
+    .cookie-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .cookie-buttons {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .cookie-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+/* Cookie Policy & Privacy Notice */
+        /* Base Layout & Theme Adaptation */
+        :root {
+                --bg-color: #f8fafc;
+                --card-bg: #ffffff;
+                --text-main: #1e293b;
+                --text-muted: #6c757d;
+                --primary-color: #4f46e5;
+                --border-color: #e2e8f0;
+                --code-bg: #f1f5f9;
+        }
+
+        /* Dark Mode Support (Automatic) */
+        @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --text-main: #cbd5e1;
+                --text-muted: #a0a0a0;
+                --primary-color: #6366f1;
+                --border-color: #334155;
+                --code-bg: #2a2a2a;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+/* मुख्य मोडल कंटेनर की स्टाइलिंग */
+.legal-modal-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .last-updated {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        h5 {
+            font-size: 1.3rem;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+        }
+
+/* 
+   यहाँ है मुख्य चातुर्य! 
+   यह कोड केवल '.legal-modal-container' के अंदर मौजूद <p> और <li> पर लागू होगा। 
+   आपके 'Quick Guide' के <li> पूरी तरह सुरक्षित रहेंगे। 
+*/
+.legal-modal-container p, 
+.legal-modal-container li {
+            font-size: 0.98rem;
+            color: var(--text-main);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+/* केवल मोडल के अंदर वाले <li> के बीच की दूरी */
+.legal-modal-container li {
+            margin-bottom: 8px;
+        }
+
+        a:hover {
+            opacity: 0.85;
+        }
+
+        .highlight-box {
+            background-color: var(--code-bg);
+            border-left: 4px solid var(--primary-color);
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+/* मोबाइल रिस्पॉन्सिव डिज़ाइन */
+@media (max-width: 600px) {
+    .legal-modal-container {
+                padding: 20px;
+                margin: 10px auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -531,6 +762,8 @@
     <div id="startDateSection" class="hidden-section">
         <label for="startDate">Subscription Start Date: <span style="color:red;">*</span></label>
         <input type="date" id="startDate">
+<!-- 👇 नया एरर टैग यहाँ जोड़ें 👇 -->
+        <div id="startDateError" class="inline-error">Please select a valid start date.</div>
 
         <label for="durationType">Subscription / Trial Unit: <span style="color:red;">*</span></label>
         <select id="durationType" onchange="handleDurationTypeChange()">
@@ -540,6 +773,8 @@
             <option value="months">Months</option>
             <option value="years">Years</option>
         </select>
+<!-- 👇 नया एरर टैग यहाँ जोड़ें 👇 -->
+        <div id="durationTypeError" class="inline-error">Please select Subscription / Trial Unit.</div>
 
         <!-- Days Section -->
         <div id="daysSection" class="hidden-section">
@@ -554,7 +789,9 @@
                 <option value="90">90 days</option>
                 <option value="custom">Custom days...</option>
             </select>
-            <input type="number" id="customDaysInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of days" min="1" inputmode="numeric">
+<!-- Days Section के अंदर -->
+<div id="daysValueError" class="inline-error"></div>
+            <input type="tel" id="customDaysInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of days" min="1" inputmode="numeric" pattern="[0-9]*">
         </div>
 
         <!-- Weeks Section -->
@@ -571,7 +808,9 @@
                 <option value="7">7 weeks</option>
                 <option value="custom">Custom weeks...</option>
             </select>
-            <input type="number" id="customWeeksInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of weeks" min="1" inputmode="numeric">
+<!-- Weeks Section के अंदर -->
+<div id="weeksValueError" class="inline-error"></div>
+            <input type="tel" id="customWeeksInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of weeks" min="1" inputmode="numeric" pattern="[0-9]*">
         </div>
 
         <!-- Months Section -->
@@ -588,7 +827,9 @@
                 <option value="7">7 months</option>
                 <option value="custom">Custom months...</option>
             </select>
-            <input type="number" id="customMonthsInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of months" min="1" inputmode="numeric">
+<!-- Months Section के अंदर -->
+<div id="monthsValueError" class="inline-error"></div>
+            <input type="tel" id="customMonthsInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of months" min="1" inputmode="numeric" pattern="[0-9]*">
         </div>
 
         <!-- Years Section -->
@@ -603,14 +844,16 @@
                 <option value="5">5 years</option>
                 <option value="custom">Custom years...</option>
             </select>
-            <input type="number" id="customYearsInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of years" min="1" inputmode="numeric">
+<!-- Years Section के अंदर -->
+<div id="yearsValueError" class="inline-error"></div>
+            <input type="tel" id="customYearsInput" class="hidden-section num-input" placeholder="🔢 Enter custom number of years" min="1" inputmode="numeric" pattern="[0-9]*">
         </div>
     </div>
 
     <!-- Mode 3: Billing Day Only -->
     <div id="billingDaySection" class="hidden-section">
         <label for="billingDayNum">Monthly Billing Day (1-31): <span style="color:red;">*</span></label>
-        <input type="number" id="billingDayNum" min="1" max="31" placeholder="e.g., 17">
+        <input type="tel" id="billingDayNum" min="1" max="31" placeholder="e.g., 17" inputmode="numeric" pattern="[0-9]*">
     </div>
 
     <!-- Mode 4: Approx Month/Year -->
@@ -635,7 +878,9 @@
 
     <div id="customNoticeSection" class="hidden-section">
         <label for="customNoticeInput">Custom Notice Period (Days): <span style="color:red;">*</span></label>
-        <input type="number" id="customNoticeInput" min="1" placeholder="Enter number of days (e.g., 10, 21, 45)">
+        <input type="tel" id="customNoticeInput" min="1" placeholder="Enter number of days (e.g., 10, 21, 45)" inputmode="numeric" pattern="[0-9]*">
+    <!-- 👇 नया एरर टैग यहाँ जोड़ें 👇 -->
+    <div id="customNoticeError" class="inline-error">Please enter a valid positive number of custom notice days.</div>
     </div>
 
     <label for="serviceRegion">Company Location / Timezone Buffer: <span style="color:red;">*</span></label>
@@ -719,15 +964,18 @@
 </main>
 
 <div class="notice-container">
-    <div class="notice-title">⚠️ Essential Disclaimer & Legal Note</div>
+    <div class="notice-title">⚠️ Essential Disclaimer & Guidelines (Crucial Notice)</div>
+    
     <div class="notice-item">
-        <strong>1. Estimated Calculations:</strong> All dates calculated are automated estimates based on your inputs. Merchants may enforce strict hourly cut-offs or gateway delays.
+        <strong>1. Accuracy & Over-reliance (Precision & Vigilance):</strong> All calculated dates are automated estimates based solely on your inputs. If you enter any incorrect details—such as notice periods, renewal dates, starting dates, business days, time zones, or processing times—the resulting dates will be wrong. Furthermore, merchants often enforce strict hourly cut-offs or gateway delays. Verify terms carefully before trusting the dates blindly.
     </div>
+    
     <div class="notice-item">
-        <strong>2. Not an Auto-Cancel Service:</strong> Using this website or saving dates DOES NOT automatically cancel your subscription. You must manually cancel with your service provider.
+        <strong>2. Not an Auto-Cancel Service (Cancel Manually):</strong> Saving dates on this website, adding reminders to your calendar, or copying reminder text DOES NOT automatically cancel your subscription. This is purely a tracking tool. You must manually cancel it on your service provider's platform.
     </div>
+    
     <div class="notice-item">
-        <strong>3. Local Storage Privacy:</strong> Your dashboard data stays 100% inside your browser's LocalStorage securely.
+        <strong>3. Local Privacy & Data Reset Risk (Data Security & Its Limitations):</strong> Your dashboard stays 100% secure inside your browser's LocalStorage. However, this absolute privacy means that clearing your browser history, wiping the cache, or using Incognito/Private Mode will completely and permanently erase all your saved dashboard data.
     </div>
 </div>
 
@@ -831,7 +1079,7 @@
                 <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; margin: 0; font-size: 13px; line-height: 1.4;"> 
                     <input type="checkbox" id="legalAgreeCheckbox" class="custom-flicker-free-checkbox" onchange="toggleConfirmButton()">
                     <div style="flex: 1; color: inherit;">
-                        <strong>I (User)</strong> have read and agree to the ⚠️ Essential Disclaimer & Legal Note, 
+                        <strong>I (User)</strong> have read and agree to the ⚠️ Essential Disclaimer & Guidelines (Crucial Notice), 
                         <a href="#privacy" onclick="openLegalModal('privacy'); return false;" style="color: #0066cc; text-decoration: underline;">Privacy Policy</a>, 
                         <a href="#terms" onclick="openLegalModal('terms'); return false;" style="color: #0066cc; text-decoration: underline;">Terms of Use</a> & 
                         <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;" style="color: #0066cc; text-decoration: underline;">Disclaimer</a>. 
@@ -842,7 +1090,7 @@
                         <ul style="margin: 4px 0 0 18px; padding: 0; list-style-type: disc;">
                             <li style="margin-bottom: 3px;">Official notice periods and processing times vary by service provider.</li>
                             <li style="margin-bottom: 3px;">I am solely responsible for verifying the exact terms with my provider.</li>
-                            <li style="margin-bottom: 3px;">This website/app holds no liability for any financial loss, missed deadlines, or automatic renewals.</li>
+                            <li style="margin-bottom: 3px;">This website/app, AlphaLabsHub, and its creator holds no liability for any direct or indirect financial loss, missed deadlines, or automatic renewals.</li>
                             <li style="margin-bottom: 0;">I am advised to cancel at least 1–2 days before the estimated deadline to avoid charges.</li>
                         </ul>
                     </div>
@@ -908,13 +1156,35 @@
 <footer>
     <p>© 2026 SubSafe D Pro. All rights reserved.</p>
     <div>
-        <a href="#privacy" onclick="openLegalModal('privacy'); return false;">Privacy&nbsp;Policy</a> | 
+        <a href="#privacy" onclick="openLegalModal('privacy'); return false;">Privacy&nbsp;Policy</a> |
+        <a href="#cookie" onclick="openLegalModal('cookie'); return false;">Cookie&nbsp;Policy</a> | 
         <a href="#terms" onclick="openLegalModal('terms'); return false;">Terms&nbsp;of&nbsp;Use</a> | 
         <a href="#disclaimer" onclick="openLegalModal('disclaimer'); return false;">Disclaimer</a> | 
         <a href="#About" onclick="openLegalModal('About'); return false;">About&nbsp;Us</a> | 
         <a href="#Contact" onclick="openLegalModal('Contact'); return false;">Contact&nbsp;Us</a>
     </div>
 </footer>
+
+<!-- Cookie Consent Banner -->
+<!-- Cookie Floating Button & Popup Box -->
+<button id="cookieToggleBtn" class="cookie-toggle-btn" onclick="toggleCookieBox()" aria-label="Cookie Preferences" style="display: none;">
+    🍪
+</button>
+
+<div id="cookieConsentBanner" class="cookie-popup" style="display: none;">
+    <div class="cookie-content">
+        <p>
+            We use cookies to enhance your experience, analyze web traffic, and serve targeted ads via Google AdSense. By clicking "Accept All", you consent to our use of cookies. Read our 
+            <a href="#cookie" onclick="openLegalModal('cookie'); return false;">Cookie Policy</a> &
+            <a href="#privacy" onclick="openLegalModal('privacy'); return false;">Privacy&nbsp;Policy</a> for details.
+        </p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn btn-decline" onclick="handleCookieConsent(false)">Decline Optional</button>
+            <button class="cookie-btn btn-accept" onclick="handleCookieConsent(true)">Accept All</button>
+        </div>
+    </div>
+</div>
+
 
 <script>
     const appState = {
@@ -936,6 +1206,27 @@
         document.getElementById("themeSelect").value = savedTheme;
         applyTheme(savedTheme);
 
+        // कुकी सहमति जाँच (Cookie Consent Check)
+        const cookieConsent = localStorage.getItem("userCookieConsent");
+        if (!cookieConsent) {
+            const toggleBtn = document.getElementById("cookieToggleBtn");
+            const banner = document.getElementById("cookieConsentBanner");
+            
+            // बटन और बॉक्स को पेज पर लायें (पर अभी छुपा हुआ है)
+            toggleBtn.style.display = "flex";
+            banner.style.display = "block"; 
+            
+            // 1 सेकंड बाद बॉक्स स्वतः (automatic) बाहर निकलेगा
+            setTimeout(() => {
+                openCookieBox();
+                
+                // 8 सेकंड (5 से 10 के बीच) रुकने के बाद स्वतः अंदर चला जाएगा
+                cookieAutoCloseTimer = setTimeout(() => {
+                    closeCookieBox();
+                }, 8000);
+            }, 1000);
+        }
+
         window.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 closeModal();
@@ -943,6 +1234,52 @@
             }
         });
     });
+
+    // कुकी बॉक्स के एनीमेशन और टाइमर के लिए वेरिएबल्स
+    let cookieAutoCloseTimer;
+    let isCookieBoxOpen = false;
+
+    function openCookieBox() {
+        const banner = document.getElementById("cookieConsentBanner");
+        banner.classList.add("show");
+        isCookieBoxOpen = true;
+    }
+
+    function closeCookieBox() {
+        const banner = document.getElementById("cookieConsentBanner");
+        banner.classList.remove("show");
+        isCookieBoxOpen = false;
+    }
+
+    function toggleCookieBox() {
+        // यदि यूज़र बटन पर खुद क्लिक करता है, तो ऑटो-क्लोज़ टाइमर को रोक दें
+        clearTimeout(cookieAutoCloseTimer);
+        
+        if (isCookieBoxOpen) {
+            closeCookieBox();
+        } else {
+            openCookieBox();
+        }
+    }
+
+    function handleCookieConsent(isAccepted) {
+        const consentValue = isAccepted ? "granted" : "denied";
+        try {
+            localStorage.setItem("userCookieConsent", consentValue);
+        } catch(e) {}
+        
+        // यूज़र के निर्णय लेते ही बॉक्स और गोलाकार बटन दोनों हमेशा के लिए गायब (अदृश्य) हो जाएंगे
+        document.getElementById("cookieConsentBanner").style.display = "none";
+        document.getElementById("cookieToggleBtn").style.display = "none";
+
+        // Google Analytics / AdSense की स्थिति अपडेट करें
+        if (typeof gtag === 'function') {
+            gtag('consent', 'update', {
+                'analytics_storage': consentValue === 'granted' ? 'granted' : 'denied',
+                'ad_storage': consentValue === 'granted' ? 'granted' : 'denied'
+            });
+        }
+    }
 
     function changeTheme() {
         const selectedTheme = document.getElementById("themeSelect").value;
@@ -1032,66 +1369,84 @@
         document.getElementById('customNoticeSection').style.display = (val === 'custom') ? 'block' : 'none';
     }
 
-    function validateAndPrompt() {
-        let isValid = true;
-        document.querySelectorAll('.inline-error').forEach(el => el.style.display = 'none');
+function validateAndPrompt() {
+    let isValid = true;
+    
+    // यह लाइन आपके सभी inline-errors को एक साथ छुपा देती है (बहुत ही उत्तम तरीका है)
+    document.querySelectorAll('.inline-error').forEach(el => el.style.display = 'none');
 
-        const subName = document.getElementById('subName').value.trim();
-        if (!subName) {
-            document.getElementById('subNameError').style.display = 'block';
-            isValid = false;
+    const subName = document.getElementById('subName').value.trim();
+    if (!subName) {
+        document.getElementById('subNameError').style.display = 'block';
+        isValid = false;
+    }
+
+    const mode = document.getElementById('dateEntryMode').value;
+    if (!mode) {
+        document.getElementById('dateModeError').style.display = 'block';
+        isValid = false;
+    } else if (mode === 'renewal' && !document.getElementById('billingDate').value) {
+        document.getElementById('billingDateError').style.display = 'block';
+        isValid = false;
+    } else if (mode === 'start') {
+        const startVal = document.getElementById('startDate').value;
+        const durationType = document.getElementById('durationType').value;
+        
+        // Alert हटाकर Inline-error लगाया गया
+        if (!startVal) { 
+            document.getElementById('startDateError').style.display = 'block'; 
+            isValid = false; 
         }
+        
+        // Alert हटाकर Inline-error लगाया गया
+        if (!durationType) { 
+            document.getElementById('durationTypeError').style.display = 'block'; 
+            isValid = false; 
+        } else {
+            // यदि durationType चुना गया है, तो उसके अंदर की वैल्यू चेक करें
+            const valDropdown = document.getElementById(durationType + 'Value').value;
+            const valueErrorDiv = document.getElementById(durationType + 'ValueError'); // HTML में बनाए गए नए एरर Divs
 
-        const mode = document.getElementById('dateEntryMode').value;
-        if (!mode) {
-            document.getElementById('dateModeError').style.display = 'block';
-            isValid = false;
-        } else if (mode === 'renewal' && !document.getElementById('billingDate').value) {
-            document.getElementById('billingDateError').style.display = 'block';
-            isValid = false;
-        } else if (mode === 'start') {
-            const startVal = document.getElementById('startDate').value;
-            const durationType = document.getElementById('durationType').value;
-            if (!startVal) { alert("Please select start date."); isValid = false; }
-            if (!durationType) { alert("Please select Subscription / Trial Unit."); isValid = false; }
-    // 👇 यहाँ से यह नया कोड जोड़ें 👇
-    if (durationType) {
-        const valDropdown = document.getElementById(durationType + 'Value').value;
-        if (!valDropdown) {
-            alert(`Please select the total number of ${durationType}.`);
-            isValid = false;
-        } else if (valDropdown === 'custom') {
-            const customVal = document.getElementById('custom' + durationType.charAt(0).toUpperCase() + durationType.slice(1) + 'Input').value;
-            if (!customVal || parseInt(customVal) <= 0) {
-                alert(`Please enter a valid custom number for ${durationType}.`);
+            if (!valDropdown) {
+                valueErrorDiv.innerText = `Please select the total number of ${durationType}.`;
+                valueErrorDiv.style.display = 'block';
                 isValid = false;
+            } else if (valDropdown === 'custom') {
+                const customVal = document.getElementById('custom' + durationType.charAt(0).toUpperCase() + durationType.slice(1) + 'Input').value;
+                
+                // isNaN (Is Not a Number) का प्रयोग करके तकनीकी बचाव
+                if (!customVal || isNaN(customVal) || parseInt(customVal) <= 0) {
+                    valueErrorDiv.innerText = `Please enter a valid custom number for ${durationType}.`;
+                    valueErrorDiv.style.display = 'block';
+                    isValid = false;
+                }
             }
         }
     }
-    // 👆 नया कोड यहाँ समाप्त 👆
-        }
 
-        const noticeVal = document.getElementById('noticePeriod').value;
-        if (noticeVal === "") {
-            document.getElementById('noticePeriodError').style.display = 'block';
-            isValid = false;
-        } else if (noticeVal === 'custom') {
-            const customVal = document.getElementById('customNoticeInput').value;
-            if (!customVal || parseInt(customVal) <= 0) {
-                isValid = false;
-                alert("Please enter a valid positive number of custom notice days.");
-            }
-        }
-
-        const regionVal = document.getElementById('serviceRegion').value;
-        if (regionVal === "") {
-            document.getElementById('serviceRegionError').style.display = 'block';
+    const noticeVal = document.getElementById('noticePeriod').value;
+    if (noticeVal === "") {
+        document.getElementById('noticePeriodError').style.display = 'block';
+        isValid = false;
+    } else if (noticeVal === 'custom') {
+        const customVal = document.getElementById('customNoticeInput').value;
+        if (!customVal || isNaN(customVal) || parseInt(customVal) <= 0) {
+            // Alert हटाकर Inline-error लगाया गया
+            document.getElementById('customNoticeError').style.display = 'block';
             isValid = false;
         }
-
-        if (!isValid) return;
-        document.getElementById('confirmModal').style.display = 'flex';
     }
+
+    const regionVal = document.getElementById('serviceRegion').value;
+    if (regionVal === "") {
+        document.getElementById('serviceRegionError').style.display = 'block';
+        isValid = false;
+    }
+
+    // यदि सब कुछ मान्य (Valid) है, तो ही मोडल दिखाएं
+    if (!isValid) return;
+    document.getElementById('confirmModal').style.display = 'flex';
+}
 
 // चेकबॉक्स टिक होने पर बटन को एक्टिवेट करने के लिए
 function toggleConfirmButton() {
@@ -1409,25 +1764,53 @@ function closeModal() {
         if (type === 'privacy') {
             titleEl.innerText = "Privacy Policy";
             contentEl.innerHTML = `
+                <div class="last-updated">Last Updated: August 14, 2026</div>
+
                 <p>At SubSafe D Pro (AlphaLabsHub), accessible from our Vercel URL, user privacy is one of our main priorities.</p>
-                <h4>Data Privacy:</h4>
-            <p>We do not collect or upload your subscription details to any server. All data (like Subscription Name and Dates) is processed and stored locally within your own browser's 'Local Storage'.</p>
-                <h4>Data Collection:</h4><p>We do not collect, store, or log any personal data, subscription names, or billing dates entered into our calculator. All calculations are performed directly within your local web browser using JavaScript. No information is ever sent to our servers.</p>
-                <h4>Cookies and Third-Party Ads:</h4><p>Once our website integrates Google AdSense, third-party vendors, including Google, may use cookies to serve ads based on a user's prior visits to our website. Users may opt out of personalized advertising by visiting Google Ads Settings.</p>
-                <h4>Consent:</h4><p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+                
+                <h4>Data Privacy & Local Storage:</h4>
+                <p>We do not collect, upload, or store your subscription details on any external server. All data (like Subscription Name and Dates) is processed and stored <strong>locally within your own device's browser memory (Local Storage)</strong>. We have no access to this information.</p>
+                
+                <h4>Analytics and Tracking:</h4>
+                <p>To improve our web tool and understand user behavior, we use <strong>Google Analytics</strong>. This service collects non-personally identifiable information (Non-PII) such as your device type, browser information, approximate geographical location (via anonymized IP address), and how you interact with our website.</p>
+                
+                <p>Google Analytics uses "cookies" (small text files placed on your device) to collect this analytical data. <strong>We do NOT use Analytics to track the specific subscription names or exact dates you type into the calculator</strong>, as those remain locked in your local storage.</p>
+                
+                <p><strong>Your Right to Opt-Out:</strong> If you wish to prevent your data from being used by Google Analytics, you can easily install the official <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color: #0066cc; text-decoration: underline;">Google Analytics Opt-out Browser Add-on</a>.</p>
+
+                <h4>Third-Party Advertising:</h4>
+                <p>We may also integrate third-party ad networks (such as Google AdSense). These vendors use cookies to serve ads based on your prior visits to our website or other websites on the internet. You can manage or opt out of personalized advertising by visiting <a href="https://myadcenter.google.com/" target="_blank" style="color: #0066cc; text-decoration: underline;">Google Ads Settings</a>.</p>
+                
+                <h4>Children's Information:</h4>
+                <p>Our tool is not intended for children under the age of 18. We do not knowingly collect any personally identifiable information from children.</p>
+                
+                <h4>Consent & Changes:</h4>
+                <p>By using our website, you consent to our Privacy Policy and agree to its terms. We reserve the right to update or change our Privacy Policy at any time, and you should check this page periodically.</p>
             `;
         } else if (type === 'terms') {
             titleEl.innerText = "Terms & Conditions";
             contentEl.innerHTML = `
+                <div class="last-updated">Last Updated: August 14, 2026</div>
+
                 <p>Rules and guidelines for using the Subscription Last Safe Cancel Date Calculator.</p>
+                
                 <h4>No Financial or Legal Advice</h4>
                 <p>The Subscription Last Safe Cancel Date Calculator is an informational tool only. It does not constitute financial, legal, or professional advice. The final decision and responsibility to manage, track, or cancel any subscription rests entirely with the user.</p>
+                
                 <h4>User Responsibility</h4>
                 <p>By using this website, you agree that you are solely responsible for managing your financial subscriptions. The reminders and dates provided by our calculator are strictly for personal organizational purposes.</p>
+                
                 <h4>Analytics and Cookies</h4>
                 <p>We may use standard analytics tools (like Google Analytics) to see how many people visit our site, what countries they are from, and what devices they use. This data is anonymized and cannot identify you personally. We may also show ads (like Google AdSense) which use cookies to show relevant advertisements.</p>
+                
+                <h4>Third-Party Links</h4>
+                <p>Our website may contain links to external sites (like subscription providers). We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p>
+                
+                <h4>Modifications to Service</h4>
+                <p>We reserve the right to modify, suspend, or discontinue the tool at any time without notice. We also reserve the right to update these terms at our discretion.</p>
+                
                 <h4>Limitation of Liability</h4>
-                <p>To the maximum extent permitted by law, this website and its creator shall not be liable for any direct or indirect financial damages, including but not limited to, unwanted subscription charges, over-draft fees, or lost funds arising from your reliance on the dates generated by this tool.</p>
+                <p>To the maximum extent permitted by law, this website, AlphaLabsHub, and its creator shall not be liable for any direct or indirect financial damages, including but not limited to, unwanted subscription charges, over-draft fees, or lost funds arising from your reliance on the dates generated by this tool.</p>
             `;
         } else if (type === 'disclaimer') {
             titleEl.innerText = "Disclaimer";
@@ -1469,6 +1852,67 @@ function closeModal() {
                 <p>We strive to respond to all user inquiries within 48 hours. Thank you for using our tool!</p>
 
                 <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+            `;
+        } else if (type === 'cookie') {
+            titleEl.innerText = "";
+    // पूरे कंटेंट को 'legal-modal-container' वाले div में लपेट दिया गया है
+    contentEl.innerHTML = `
+    <div class="legal-modal-container">
+        <h1>Cookie Policy & Data Notice</h1>
+    <div class="last-updated">Last Updated: August 14, 2026</div>
+
+    <p>This Cookie Policy explains how our website uses cookies, local storage, and similar technologies to recognize you when you visit our platform, measure performance, and deliver personalized content or advertisements.</p>
+
+    <!-- Section 1: What are Cookies & Local Storage -->
+    <h5>1. What are Cookies & Local Storage?</h5>
+    <p><strong>Cookies</strong> are small data files placed on your device (computer, tablet, or mobile) when you visit a website. They are widely used to make websites work efficiently, remember user preferences, and provide reporting information.</p>
+    <p><strong>Local Storage (HTML5)</strong> is a web storage mechanism that allows us to store data locally within your browser. Unlike cookies, Local Storage data does not get transmitted to servers on every HTTP request, making it safer, faster, and more private for offline tracking features.</p>
+
+    <!-- Section 2: Types of Cookies We Use -->
+    <h5>2. Types of Technologies We Use</h5>
+    <p>We utilize the following categories of storage and tracking technologies:</p>
+    
+    <ul>
+        <!-- अब यहाँ बेझिझक <li> का उपयोग करें, यह Quick Guide को प्रभावित नहीं करेगा -->
+        <li>
+            <strong>Strictly Necessary & LocalStorage (Essential):</strong> These are required for the website to function properly. We use browser LocalStorage exclusively to store your calculator settings, subscription entries, and user preferences on your local device. 
+        </li>
+        <li>
+            <strong>Analytics Cookies:</strong> We use services like <em>Google Analytics</em> to collect aggregate information about website traffic, visitor interactions, and usage patterns. This helps us measure performance and improve user experience.
+        </li>
+        <li>
+            <strong>Advertising Cookies (Google AdSense):</strong> Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website or other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visit to our sites and/or other sites on the Internet.
+        </li>
+    </ul>
+
+    <!-- Section 3: Managing Cookies & LocalStorage -->
+    <h5>3. How to Control & Manage Cookies</h5>
+    <p>You have the right to decide whether to accept or reject optional cookies. Here is how you can manage your preferences:</p>
+    
+    <ul>
+        <li><strong>Browser Settings:</strong> You can set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website, though your access to some functionality and areas may be restricted.</li>
+        <li><strong>Managing LocalStorage:</strong> Clearing your browser history, cache, or site data will wipe your saved dashboard preferences and entries. Using Private/Incognito mode will automatically wipe LocalStorage once you close the browser session.</li>
+    </ul>
+
+    <!-- Section 4: Opt-Out Links -->
+    <h5>4. Third-Party Advertising & Opt-Out Settings</h5>
+    <p>To exercise control over personalized advertising served by third parties, you can utilize the following official tools:</p>
+    
+       
+    <div class="highlight-box">
+        <ul>
+            <li><strong>Google AdSense Preferences:</strong> Users may opt out of personalized advertising by visiting <a href="https://adssettings.google.com" target="_blank" style="color: #0066cc; text-decoration: underline;">Google Ads Settings</a>.</li>
+            <li><strong>Third-Party Opt-Out:</strong> Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/"  target="_blank" style="color: #0066cc; text-decoration: underline;">www.aboutads.info</a>.</li>
+        </ul>
+    </div>
+
+    <h5>5. Changes to This Policy</h5>
+    <p>We may update this Cookie Policy from time to time in order to reflect changes to the cookies we use or for other operational, legal, or regulatory reasons. Please re-visit this Cookie Policy regularly to stay informed about our use of cookies and related technologies.</p>
+
+    <h5>6. Contact Us</h5>
+    <p>If you have any questions about our use of cookies, LocalStorage, or other technologies, please contact us via our site feedback options or official legal communication channels.</p>
+</div>
+
             `;
         } else if (type === 'subName') {
             titleEl.innerText = "Guide: Subscription Name";
